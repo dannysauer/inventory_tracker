@@ -37,7 +37,8 @@ if( 0 !== substr_compare(
 <?php // include mobile zoon meta tags
   readfile( "zoom.html" )
 ?>
-<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="style.css" />
+<script type="text/javascript" src="common.js"></script>
 </head>
 <body>
 <?php
@@ -47,14 +48,26 @@ print "<div>In container '$container'</div>";
 print "Remote host '$_SERVER[REMOTE_ADDR]' is probably "
     . ($internal ? '' : 'not')
     . " internal";
+
 if( $internal ){
+    // new container
     print "<div id='newcontainer'>Create a new container: "
         . "<form action='create.php'>"
         . "<input type='hidden' name='container' value='".addslashes($container)."'>"
         . "<input type='text' name='new' value='new'>"
         . "<input type='submit' value='Create'>"
         . "</form></div>";
+
+    // upload
+    print "<div id='newimage'>Add an image: "
+        . "<form action='upload.php'>"
+        . "<input type='hidden' name='container' value='".addslashes($container)."'>"
+        . "<input type='file' name='picture' accept = 'image/*' onChange='picture_added(event)' />"
+        . "<br /><img src='about:blank' alt='' id='picture-preview' height='100' width='100'/><br />"
+        . "<input type='submit' value='Upload' />"
+        . "</form></div>";
 }
+
 if( ! $containers = opendir( $config->image_base . "/$container" ) ){
     die( "Error opening base dir" );
 }
