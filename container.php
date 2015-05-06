@@ -58,14 +58,14 @@ if( $internal ){
 if( ! $containers = opendir( $config->image_base . "/$container" ) ){
     die( "Error opening base dir" );
 }
-while( false !== ($container = readdir($containers)) ){
-    if( $container == '.' or $container == '..' ){
+while( false !== ($subcontainer = readdir($containers)) ){
+    if( $subcontainer == '.' or $subcontainer == '..' ){
         continue;
     }
     print "<div class='container'>
            Container: <a class='container' href='container.php?"
-        . urlencode($container)
-        . "'>$container</a></div>\n";
+        . "container=" . urlencode($container.'/'.$subcontainer)
+        . "'>$subcontainer</a></div>\n";
 }
 ?>
 </body>
