@@ -1,0 +1,7 @@
+{
+  "image_base": "/srv/nfs4/pictures/inventory",
+  "rfid":  "rfid",
+  "qr": "qr",
+  "dir_regex": "/^[[:alnum:] _\\-\\.\\/]+$/",
+  "file_regex": "/^[[:alnum:] _\\-\\.]+$/"
+}
