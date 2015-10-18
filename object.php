@@ -19,17 +19,39 @@ if( $container === null ){
 if( $container === false ){
     die( "container validation failed." );
 }
-$path='';
+$container_path='';
 if( 0 !== substr_compare(
-    $path=absolutepath( $config->image_base . "/$container" ),
+    $container_path=absolutepath( $config->image_base . "/$container" ),
     $config->image_base,
     0,
     strlen($config->image_base)
     )
 ){
-    die( "Path '$path' is not under base dir." );
+    die( "Path '$container_path' is not under base dir." );
 }
 /* end candidate */
+$object = filter_input( INPUT_GET, 'object',
+    FILTER_VALIDATE_REGEXP,
+    array('options'=>array('regexp'=>$config->dir_regex))
+);
+if( $object === null ){
+    $object = filter_input( INPUT_POST, 'object',
+        FILTER_VALIDATE_REGEXP,
+        array('options'=>array('regexp'=>$config->dir_regex))
+    );
+}
+if(  $object !== null
+ and $obj_path = "$container_path/$object"
+ and is_file( $obj_path )
+){
+    // This is easier to read than negating the conditions
+}
+else{
+    print "Can't find '$container_path/$object'";
+//    header( "Location: container.php?container=$container" );
+    die();
+}
+
 
 ?><!DOCTYPE html>
 <html>
@@ -42,7 +64,7 @@ if( 0 !== substr_compare(
 </head>
 <body>
 <?php
-chdir( $config->image_base . '/' . $container )
+chdir( $container_path )
     or die( "Failed to change to container directory." );
 print "<div>In container '$container'</div>";
 print "Remote host '$_SERVER[REMOTE_ADDR]' is probably "
@@ -50,14 +72,15 @@ print "Remote host '$_SERVER[REMOTE_ADDR]' is probably "
     . " internal";
 
 if( $internal ){
-    // container details
-    #print "<div id='container_detail' class='two_column'>"
-    print "<div id='container_detail'>"
-        . "<form action='update_container.php'>"
+    // object details
+    print "<div id='object_details'>"
+        . "<form action='update_object.php'>"
         ;
     #var_dump($config);
-    foreach( $config->container_xattrs as $attr ){
-        #$val = xattr_get( '.', $attr );
+    $attrs = xattr_list( $obj_path );
+    //$attrs = array();
+    foreach( $attrs as $attr ){
+        $val = xattr_get( $obj_path, $attr );
         if( $val === FALSE ){
             $val = '';
         }
@@ -74,30 +97,13 @@ if( $internal ){
         . "</form>"
         . "</div>"
         ;
-
-    // new container
-    print "<div id='newcontainer'>Create a new container: "
-        . "<form action='create.php'>"
-        . "<input type='hidden' name='container' value='".addslashes($container)."'>"
-        . "<input type='text' name='new' value='new'>"
-        . "<input type='submit' value='Create'>"
-        . "</form></div>";
-
-    // upload
-    print "<div id='newimage'>Add an image: "
-        . "<form action='upload.php' enctype='multipart/form-data' method='POST'>"
-        . "<input type='hidden' name='container' value='".addslashes($container)."'>"
-        // add MAX_FILE_SIZE at some point
-        // http://php.net/manual/en/features.file-upload.post-method.php
-        . "<input type='file' name='picture' accept = 'image/*' onChange='picture_added(event)' />"
-        . "<br /><img src='about:blank' alt='' id='picture-preview' /><br />"
-        . "<input type='submit' id='image_upload' disabled='true' value='Upload' />"
-        . "</form></div>";
 }
+print "<div>$obj_path</div>";
+print "<div class='object'><img src='/inventory_images/$container/$object' /></div>";
 
-$container_path = $config->image_base . "/$container" ;
-if( ! $container_handle = opendir( $config->image_base . "/$container" ) ){
-    die( "Error opening base dir" );
+
+if( ! $container_handle = opendir( $container_path ) ){
+    die( "Error opening container dir" );
 }
 while( false !== ($subcontainer = readdir($container_handle)) ){
     if( $subcontainer == '.' or $subcontainer == '..' ){
@@ -106,7 +112,7 @@ while( false !== ($subcontainer = readdir($container_handle)) ){
     $containers[] = $subcontainer;
 }
 foreach( $containers as $subcontainer ){
-    if( is_dir( $config->image_base . "/$container/$subcontainer" ) ){
+    if( is_dir( "$container_path/$subcontainer" ) ){
         print "<div class='container'>
                Container: <a class='container' href='container.php?"
             . "container=" . urlencode($container.'/'.$subcontainer)
@@ -114,15 +120,11 @@ foreach( $containers as $subcontainer ){
     }
 }
 foreach( $containers as $subcontainer ){
-    if( ! is_dir( $config->image_base . "/$container/$subcontainer" ) ){
+    if( ! is_dir( "$container_path/$subcontainer" ) ){
         print "<div class='container'>
                Object: <a class='object' href='object.php?"
-               . join( '&', array(
-                   "container=" . urlencode($container) ,
-                   "object="    . urlencode($subcontainer) ,
-               ))
-               . "'>$subcontainer</a></div>\n";
-
+            . "container=" . urlencode($container.'/'.$subcontainer)
+            . "'>$subcontainer</a></div>\n";
     }
 }
 ?>

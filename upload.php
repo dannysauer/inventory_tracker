@@ -16,7 +16,8 @@ if( $container === null ){
         array('options'=>array('regexp'=>$config->dir_regex))
     );
 }
-$picture = filter_input( INPUT_POST, 'picture', FILTER_VALIDATE_ANY );
+$picture = filter_input( INPUT_POST, 'picture', FILTER_SANITIZE_STRING,
+ FILTER_FLAG_STRIP_LOW & FILTER_FLAG_STRIP_HIGH);
 
 $path='';
 if( 0 !== substr_compare(
@@ -29,17 +30,24 @@ if( 0 !== substr_compare(
     die( "Path '$path' is not under base dir." );
 }
 
-if( ! find_container($new) ){
-    chdir( $path = $config->image_base . "/$container" )
-        or die( "Failed to change to container directory '$path'." );
-    mkdir( $new, 0775)
-        or die( "Failed to create directory." );
-    if( ! http_redirect( "container.php",
-                       array( "container" => "$container/$new" ) )
-    ){
-        print "Redirect failed. :(";
+$target = '';
+if( FALSE === ($target = find_container($container)) ){
+    die( "Failed to locate directory '$container'." );
+}
+
+foreach( $_FILES as $F ){
+    // should probably compare mime type to image/* or something
+    // print "mime is " . $F['type'];
+    $newfile = uniqid(basename($F['name']), false);
+    if( $F['error'] == UPLOAD_ERR_OK ){
+        move_uploaded_file( $F['tmp_name'], $target.'/'.$newfile );
+    }
+    else{
+        die( 'upload failed ' + $F['error'] );
     }
 }
+header( 'Location: ' . $_SERVER['HTTP_REFERER'] );
+die( "Something went wrong" );
 
 ?><!DOCTYPE html>
 <html>

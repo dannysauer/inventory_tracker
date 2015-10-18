@@ -3,6 +3,7 @@ require_once 'parse_config.php';
 require_once 'internal_or_external.php';
 
 function find_container($d){
+    global $config;
     return( dir_search($d, $config->image_base) );
 }
 
@@ -10,13 +11,20 @@ function dir_search($name, $dir){
     if( false === ($d = opendir($dir)) ){
         return( FALSE );
     }
+    // should really only do this if $dir contains a '/'
+    if( opendir( "$dir/$name" ) ){
+        return( "$dir/$name" );
+    }
     while( false !== ($e = readdir($d)) ){
-        if( is_dir( "$dir/$d" ) ){
-            if( $d == $name ){
-                return( "$dir/$d" );
+        if( $e == '.' || $e == '..' ){
+            continue;
+        }
+        if( is_dir( "$dir/$e" ) ){
+            if( $e == $name ){
+                return( "$dir/$e" );
             }
             else{
-                if( false !== ($r = dir_search( $name, "$dir/$d" )) ){
+                if( false !== ($r = dir_search( $name, "$dir/$e" )) ){
                     return( $r );
                 };
             }

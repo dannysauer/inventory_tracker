@@ -3,5 +3,13 @@
   "rfid":  "rfid",
   "qr": "qr",
   "dir_regex": "/^[[:alnum:] _\\-\\.\\/]+$/",
-  "file_regex": "/^[[:alnum:] _\\-\\.]+$/"
+  "file_regex": "/^[[:alnum:] _\\-\\.]+$/",
+  "container_xattrs": [
+      "location",
+      "description"
+  ],
+  "object_xattrs": [
+      "keywords",
+      "description"
+  ]
 }

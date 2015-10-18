@@ -13,3 +13,30 @@ body {
    /* width: 100%; */
    background-color: yellow;
 }
+
+.two_column {
+    -webkit-column-count: 2; /* Chrome, Safari, Opera */
+    -moz-column-count: 2; /* Firefox */
+    column-count: 2;
+    column-fill: auto;
+}
+
+#picture-preview {
+    visibility: hidden;
+    /*width: auto; */
+    height: auto;
+    max-width: 25%;
+}
+
+#container_detail form {
+    display: table;
+}
+#container_detail .table_row {
+    display: table-row;
+}
+#container_detail label {
+    display: table-cell;
+}
+#container_detail input {
+    display: table-cell;
+}
