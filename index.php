@@ -6,7 +6,7 @@ require_once 'internal_or_external.php';
 ?><!DOCTYPE html>
 <html>
 <head>
-<?php // include mobile zoon meta tags
+<?php // include mobile zoom meta tags
   readfile( "zoom.html" )
 ?>
 <link rel="stylesheet" type="text/css" href="style.css">
