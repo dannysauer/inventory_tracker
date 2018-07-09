@@ -4,12 +4,13 @@
   "qr": "qr",
   "dir_regex": "/^[[:alnum:] _\\-\\.\\/]+$/",
   "file_regex": "/^[[:alnum:] _\\-\\.]+$/",
-  "container_xattrs": [
+  "container_attrs": [
       "location",
       "description"
   ],
-  "object_xattrs": [
+  "object_attrs": [
       "keywords",
-      "description"
+      "description",
+      "holiday"
   ]
 }
