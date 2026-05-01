@@ -46,7 +46,7 @@ foreach( $_FILES as $F ){
         die( 'upload failed ' . $F['error'] );
     }
 }
-header( 'Location: ' . $_SERVER['HTTP_REFERER'] );
+header( 'Location: container.php?container=' . urlencode($container) );
 die( "Something went wrong" );
 
 ?><!DOCTYPE html>

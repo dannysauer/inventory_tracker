@@ -75,6 +75,6 @@ foreach( $attrs as $attr => $val ){
     }
 }
 
-header( 'Location: ' . $_SERVER['HTTP_REFERER'] );
+header( 'Location: object.php?container=' . urlencode($container) . '&object=' . urlencode($object) );
 die( "Something went wrong" );
 ?>

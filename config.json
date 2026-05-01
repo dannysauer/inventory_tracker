@@ -2,6 +2,7 @@
   "image_base": "/srv/nfs4/pictures/inventory",
   "rfid":  "rfid",
   "qr": "qr",
+  "internal_network": "192.168.0.0/24",
   "dir_regex": "/^[[:alnum:] _\\-\\.\\/]+$/",
   "file_regex": "/^[[:alnum:] _\\-\\.]+$/",
   "container_attrs": [

@@ -56,7 +56,7 @@ foreach( $attrs as $attr => $val ){
     }
 }
 
-header( 'Location: ' . $_SERVER['HTTP_REFERER'] );
+header( 'Location: container.php?container=' . urlencode($container) );
 die( "Something went wrong" );
 
 
