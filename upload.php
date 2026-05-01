@@ -43,7 +43,7 @@ foreach( $_FILES as $F ){
         move_uploaded_file( $F['tmp_name'], $target.'/'.$newfile );
     }
     else{
-        die( 'upload failed ' + $F['error'] );
+        die( 'upload failed ' . $F['error'] );
     }
 }
 header( 'Location: ' . $_SERVER['HTTP_REFERER'] );

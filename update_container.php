@@ -32,7 +32,7 @@ foreach( $config->container_attrs as $attr ){
     );
     if( $val !== null ){
         $attrs[$attr] = $val;
-        next;
+        continue;
     }
     $val = filter_input( INPUT_POST, "attr_$attr", 
         FILTER_SANITIZE_STRING,
@@ -40,7 +40,7 @@ foreach( $config->container_attrs as $attr ){
     );
     if( $val !== null ){
         $attrs[$attr] = $val;
-        next;
+        continue;
     }
 }
 

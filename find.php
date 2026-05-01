@@ -38,7 +38,7 @@ function dir_search($name, $dir){
 // http://stackoverflow.com/questions/4049856/replace-phps-realpath
 function absolutePath($path) {
     $isEmptyPath    = (strlen($path) == 0);
-    $isRelativePath = ($path{0} != '/');
+    $isRelativePath = ($path[0] != '/');
     $isWindowsPath  = !(strpos($path, ':') === false);
 
     if (($isEmptyPath || $isRelativePath) && !$isWindowsPath)

@@ -20,7 +20,7 @@ $new = filter_input( INPUT_GET, 'new',
     array('options'=>array('regexp'=>$config->file_regex))
 );
 if( $new === null ){
-    $new = filter_input( INPUT_POST, 'nwq',
+    $new = filter_input( INPUT_POST, 'new',
         FILTER_VALIDATE_REGEXP,
         array('options'=>array('regexp'=>$config->file_regex))
     );
@@ -41,11 +41,8 @@ if( ! find_container($new) ){
         or die( "Failed to change to container directory '$path'." );
     mkdir( $new, 0775)
         or die( "Failed to create directory." );
-    if( ! http_redirect( "container.php",
-                       array( "container" => "$container/$new" ) )
-    ){
-        print "Redirect failed. :(";
-    }
+    header( "Location: container.php?container=" . urlencode("$container/$new") );
+    exit();
 }
 
 ?><!DOCTYPE html>

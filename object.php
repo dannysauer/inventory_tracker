@@ -74,7 +74,9 @@ print "Remote host '$_SERVER[REMOTE_ADDR]' is probably "
 if( $internal ){
     // object details
     print "<div id='object_details'>"
-        . "<form action='update_object.php'>"
+        . "<form action='update_object.php' method='POST'>"
+        . "<input type='hidden' name='container' value='$container' />"
+        . "<input type='hidden' name='object' value='$object' />"
         ;
     #var_dump($config);
     $attrs = xattr_list( $obj_path );
@@ -84,16 +86,17 @@ if( $internal ){
         if( $val === FALSE ){
             $val = '';
         }
-        $val = 'pie';
         # TODO: escape $atr for input naming purposes
         print "<div id='attr_$attr' class='table_row'>"
             . "<label for='attr_$attr' class='container_attr'>$attr</label>"
             #. "<div class='container_val'>"
-            . "<input type='text' name='attr_$attr' value='$val' />"
+            . "<input type='text' name='attr_$attr' value='$val'"
+            . " onChange='this.form.elements.namedItem(\"s\").disabled=false' />"
             . "</div>"
             ;
     }
     print ""
+        . "<input type='submit' id='s' disabled='true' />"
         . "</form>"
         . "</div>"
         ;
