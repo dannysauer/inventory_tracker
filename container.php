@@ -44,8 +44,8 @@ if( 0 !== substr_compare(
 <?php
 chdir( $config->image_base . '/' . $container )
     or die( "Failed to change to container directory." );
-print "<div>In container '$container'</div>";
-print "Remote host '$_SERVER[REMOTE_ADDR]' is probably "
+print "<div>In container '" . htmlspecialchars($container) . "'</div>";
+print "Remote host '" . htmlspecialchars($_SERVER['REMOTE_ADDR']) . "' is probably "
     . ($internal ? '' : 'not')
     . " internal";
 
@@ -62,18 +62,17 @@ if( $internal ){
             $val = '';
         }
         #$val = 'pie';
-        # TODO: escape $atr for input naming purposes
-        print "<div id='attr_$attr' class='table_row'>"
-            . "<label for='attr_$attr' class='container_attr'>$attr</label>"
+        $attr_e = htmlspecialchars($attr, ENT_QUOTES);
+        print "<div id='attr_$attr_e' class='table_row'>"
+            . "<label for='attr_$attr_e' class='container_attr'>$attr_e</label>"
             #. "<div class='container_val'>"
-            . "<input type='text' name='attr_$attr' value='$val'
-               onChange='this.form.elements.namedItem(\"s\").disabled=false'
-               />"
+            . "<input type='text' name='attr_$attr_e' value='" . htmlspecialchars($val, ENT_QUOTES) . "'"
+            . " onChange='this.form.elements.namedItem(\"s\").disabled=false' />"
             . "</div>"
             ;
     }
     print ""
-        . "<input type='hidden' name='container' value='$container' />"
+        . "<input type='hidden' name='container' value='" . htmlspecialchars($container, ENT_QUOTES) . "' />"
         . "<input type='submit' id='s' disabled='true' />"
         . "</form>"
         . "</div>"
@@ -82,7 +81,7 @@ if( $internal ){
     // new container
     print "<div id='newcontainer'>Create a new container: "
         . "<form action='create.php'>"
-        . "<input type='hidden' name='container' value='".addslashes($container)."'>"
+        . "<input type='hidden' name='container' value='" . htmlspecialchars($container, ENT_QUOTES) . "'>"
         . "<input type='text' name='new' value='new'>"
         . "<input type='submit' value='Create'>"
         . "</form></div>";
@@ -90,7 +89,7 @@ if( $internal ){
     // upload
     print "<div id='newimage'>Add an image: "
         . "<form action='upload.php' enctype='multipart/form-data' method='POST'>"
-        . "<input type='hidden' name='container' value='".addslashes($container)."'>"
+        . "<input type='hidden' name='container' value='" . htmlspecialchars($container, ENT_QUOTES) . "'>"
         // add MAX_FILE_SIZE at some point
         // http://php.net/manual/en/features.file-upload.post-method.php
         . "<input type='file' name='picture' accept = 'image/*' onChange='picture_added(event)' />"
@@ -114,7 +113,7 @@ foreach( $containers as $subcontainer ){
         print "<div class='container'>
                Container: <a class='container' href='container.php?"
             . "container=" . urlencode($container.'/'.$subcontainer)
-            . "'>$subcontainer</a></div>\n";
+            . "'>" . htmlspecialchars($subcontainer) . "</a></div>\n";
     }
 }
 foreach( $containers as $subcontainer ){
@@ -125,7 +124,7 @@ foreach( $containers as $subcontainer ){
                    "container=" . urlencode($container) ,
                    "object="    . urlencode($subcontainer) ,
                ))
-               . "'>$subcontainer</a></div>\n";
+               . "'>" . htmlspecialchars($subcontainer) . "</a></div>\n";
 
     }
 }

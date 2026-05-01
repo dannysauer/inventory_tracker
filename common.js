@@ -23,7 +23,7 @@ function picture_added( e ){
 function preview_image(src, dst){
     var URL = window.URL || window.webkitURL;
     var img_url = URL.createObjectURL( src );
+    dst.onload = function() { URL.revokeObjectURL( img_url ); };
     dst.src = img_url;
     dst.style.visibility = 'visible';
-    //URL.revokeObjectURL( img_url );
 }

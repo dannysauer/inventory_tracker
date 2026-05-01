@@ -66,8 +66,8 @@ else{
 <?php
 chdir( $container_path )
     or die( "Failed to change to container directory." );
-print "<div>In container '$container'</div>";
-print "Remote host '$_SERVER[REMOTE_ADDR]' is probably "
+print "<div>In container '" . htmlspecialchars($container) . "'</div>";
+print "Remote host '" . htmlspecialchars($_SERVER['REMOTE_ADDR']) . "' is probably "
     . ($internal ? '' : 'not')
     . " internal";
 
@@ -75,8 +75,8 @@ if( $internal ){
     // object details
     print "<div id='object_details'>"
         . "<form action='update_object.php' method='POST'>"
-        . "<input type='hidden' name='container' value='$container' />"
-        . "<input type='hidden' name='object' value='$object' />"
+        . "<input type='hidden' name='container' value='" . htmlspecialchars($container, ENT_QUOTES) . "' />"
+        . "<input type='hidden' name='object' value='" . htmlspecialchars($object, ENT_QUOTES) . "' />"
         ;
     #var_dump($config);
     $attrs = xattr_list( $obj_path );
@@ -86,11 +86,11 @@ if( $internal ){
         if( $val === FALSE ){
             $val = '';
         }
-        # TODO: escape $atr for input naming purposes
-        print "<div id='attr_$attr' class='table_row'>"
-            . "<label for='attr_$attr' class='container_attr'>$attr</label>"
+        $attr_e = htmlspecialchars($attr, ENT_QUOTES);
+        print "<div id='attr_$attr_e' class='table_row'>"
+            . "<label for='attr_$attr_e' class='container_attr'>$attr_e</label>"
             #. "<div class='container_val'>"
-            . "<input type='text' name='attr_$attr' value='$val'"
+            . "<input type='text' name='attr_$attr_e' value='" . htmlspecialchars($val, ENT_QUOTES) . "'"
             . " onChange='this.form.elements.namedItem(\"s\").disabled=false' />"
             . "</div>"
             ;
@@ -101,8 +101,8 @@ if( $internal ){
         . "</div>"
         ;
 }
-print "<div>$obj_path</div>";
-print "<div class='object'><img src='/inventory_images/$container/$object' /></div>";
+print "<div>" . htmlspecialchars($obj_path) . "</div>";
+print "<div class='object'><img src='/inventory_images/" . htmlspecialchars($container, ENT_QUOTES) . "/" . htmlspecialchars($object, ENT_QUOTES) . "' /></div>";
 
 
 if( ! $container_handle = opendir( $container_path ) ){
@@ -119,7 +119,7 @@ foreach( $containers as $subcontainer ){
         print "<div class='container'>
                Container: <a class='container' href='container.php?"
             . "container=" . urlencode($container.'/'.$subcontainer)
-            . "'>$subcontainer</a></div>\n";
+            . "'>" . htmlspecialchars($subcontainer) . "</a></div>\n";
     }
 }
 foreach( $containers as $subcontainer ){
@@ -127,7 +127,7 @@ foreach( $containers as $subcontainer ){
         print "<div class='container'>
                Object: <a class='object' href='object.php?"
             . "container=" . urlencode($container.'/'.$subcontainer)
-            . "'>$subcontainer</a></div>\n";
+            . "'>" . htmlspecialchars($subcontainer) . "</a></div>\n";
     }
 }
 ?>
